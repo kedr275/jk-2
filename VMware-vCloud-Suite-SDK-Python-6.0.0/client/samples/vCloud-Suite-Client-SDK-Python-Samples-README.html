@@ -1,0 +1,484 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/tr/1999/REC-html401-19991224/loose.dtd">
+<html><head>
+<title>VMware vCloud Suite Python SDK: client samples README</title>
+
+<meta content="VMware, Inc. All rights reserved." name="copyright"></meta>
+<link rel="stylesheet" type="text/css" href="../../docs/resources/template.css"></link>
+<script src="../../docs/resources/version.js" type="text/javascript"></script>
+<style type="text/css">
+
+h4 {
+	padding: 0;
+	font-size: 12px;
+	font-weight: bold;
+	border-top: 1px solid #dedede;
+	background-color:#E6EDF6;
+}
+
+
+.Parameter {
+	margin: 0 0 7px 0;
+	width: 100%;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.Code
+    {
+	font-size: 11px; font-family: 
+	"Courier New", Courier, monospace; 
+	}
+	
+.Console
+    {
+	font-size: 11px; font-family: 
+	"Courier New", Courier, monospace; 
+	color: #ffffff;
+	font-weight: bold;
+	background: #000000;
+	}
+.Caption {
+	font-size:11px; line-height:12px; text-transform: uppercase; FONT-WEIGHT: bold; COLOR: #000000; TEXT-DECORATION: none
+}
+.Exp {
+	font-size:11px; text-transform: uppercase; FONT-WEIGHT: bold; COLOR: #3366AA;
+}
+.Large { font-size: 16px; FONT-WEIGHT: bold; }
+
+.TableText {
+	FONT-SIZE: 11px;
+}
+
+.TableHead {
+	FONT-SIZE: 10px; font-weight: bold;
+}
+
+.BoldRedText {
+	FONT-WEIGHT: bold; COLOR: #CC0000; TEXT-DECORATION: none
+}
+.BoldBlue {
+	FONT-WEIGHT: bold; COLOR: #3366AA; TEXT-DECORATION: none
+}
+.Miniscule {font-size: 9px;
+           }
+
+.Nav {font-size: 11px; COLOR: #3366AA;
+           }
+.Large { font-size: 16px; FONT-WEIGHT: bold; }
+</style>
+
+
+</head>
+<body>
+	
+<table cellpadding="0" cellspacing="5" id="main-table">
+<tr><td id="main-body" align="left">
+<!-- ///*** start of content area ***/// -->
+
+
+<table width="100%" cellpadding="5">
+<tr>
+<td><h1>VMware vCloud Suite Python SDK: client samples README</h1></td>
+<td align="right">
+<img src="../../docs/resources/vmware.gif" alt="VMware logo" width="187" height="72" border="0"></img>
+</td>
+</tr>
+</table>
+
+<p class="Nav">
+<img src="../../docs/resources/page.gif" alt="vCloud Suite Python SDK client README" width="13" height="16" border="0"></img> &nbsp;
+<a href="../vCloud-Suite-Client-SDK-Python-README.html" title="vCloud Suite Python SDK client README...">VMware vCloud Suite Python SDK: client README</a><br />
+</p>
+<hr/>
+
+
+<p>
+<script type="text/javascript">
+  document.write('This document describes the vCloud Suite Python SDK samples that use the vCloud Suite python client library')
+  document.write(' (vapi_common_client-' + gVersions.vapiversion + ') ')
+  document.write('and vAPI runtime library')
+  document.write(' (vapi_runtime-' + gVersions.vapiversion + ').')
+</script>
+Additionally, some of the samples demonstrate the combined use of the vCloud Suite and vSphere APIs.
+ To support this combined use, the vCloud Suite Python SDK samples require the vSphere Management SDK packages 
+(<a href="https://github.com/vmware/pyvmomi">pyVmomi</a>) to be installed on the client.
+ The examples have been developed to work with the python <strong>2.7</strong>, <strong>3.3</strong> and <strong>3.4</strong>.
+</p>
+
+The following sections provide information about using the samples..
+
+<ul>
+<li><a href="#dependencies">Python SDK and 3rd party Library Dependencies</a></li>
+<li><a href="#packaging">Feature Samples</a></li>
+<li><a href="#programstructure">Sample Program Structure</a></li>
+<li><a href="#runningsample">Running the Samples</a></li>
+</ul>
+
+
+<a name="dependencies"></a>
+<h2>Python SDK and 3rd party Dependencies</h2>
+<p>
+Please see the instructions for <a href="../vCloud-Suite-Client-SDK-Python-README.html#installingsdklibs">installing the SDK and 3rd party libraries</a>.
+</p>
+
+<a name="packaging"></a>
+<h2>Feature Samples</h2>
+
+<p> The vCloud Suite Python SDK samples are located in the client sample directory:
+<br/><strong>samples</strong><br/><br/>
+The following table shows the sample sub-directories and their contents.
+</p>
+
+<table border="1" cellpadding="5">
+<tr><th>Directory</th><th>Description</th></tr>
+<tr><td>com.vmware.vcloud.suite.samples.common</td><td>Samples common classes and abstractions; This package does NOT contain any sample</td></tr>
+<tr><td>com.vmware.vcloud.suite.samples.vim.helpers</td><td>Samples and utilities for accessing and manipulating VC objects using pyVmomi</td></tr>
+<tr><td>com.vmware.vcloud.suite.samples.lookupservice</td><td>Service discovery sample using lookup service APIs</td></tr>
+<tr><td>com.vmware.vcloud.suite.samples.workflow</td><td>Various vAPI work flow samples</td></tr>
+<tr><td>com.vmware.vcloud.suite.samples.inventory</td><td>Samples for inventory APIs for retrieving information about vCenter datastore and network objects.</td></tr>
+</table>
+
+
+
+<a name="programstructure"></a>
+<h2>Sample Program Structure</h2>
+<p>
+The vCloud Suite Python SDK samples use a framework to facilitate different aspects of using the samples. 
+Some of the framework capabilities are:
+<ul>
+<li>Command line argument parsing.</li>
+<li>Specifying mandatory and optional arguments for a sample.</li>
+<li>Sample setup, execution and post-execution cleanup.</li>
+<li>Information about samples.</li>
+</ul>
+</p>
+
+<p>
+To work with the VMWare-supported deployment configurations of Platform Services Controllers (Single Sign-On) and
+ vCenter Servers, applications need to dynamically discover service URLs to make service requests. Before making
+ service requests, applications need to authenticate with the Single Sign-On service. 
+<br/>
+Most of the vCloud Suite client application performs the following basic tasks to connect to the vAPI and vim service endpoint 
+(on a management node) and accomplish Platform Services initialization.
+</p>
+
+<ul>
+<li>Step 1: Connect to the lookup service endpoint on the Platform Service Controller Node.</li>
+<li>Step 2: Discover the Single Sign-On service URL from lookup service.</li>
+<li>Step 3: Connect to the Single Sign-On URL and retrieve the SAML token.</li>
+<li>Step 4: Discover the vim, vAPI service URL's of the respective Management Node.</li>
+<li>Step 5: Login to vAPI and vim service endpoints.</li>
+<li>Step 6: Discover other services through lookup service.</li>
+<li>Step 7: Perform certain tasks using the vAPI and vim services.</li>
+</ul>
+
+
+<p>
+The call sequence shown above is implemented in the samples framework through the following modules:</br>
+<ul>
+<li><code>src/com/vmware/vcloud/suite/sample/common/lookup_service_helper</code> provides methods for discovering management nodes and service endpoint URLs on management nodes from lookup service.</li>
+<li><code>src/com/vmware/vcloud/suite/sample/common/platform_service_controller</code> uses lookup_service_helper to discover the Single Sign-On URL (on any of the Platform Service Controller node) and then retrieves the SAML token from the Single Sign-On server by authenticating the given user.</li>
+<li><code>src/com/vmware/vcloud/suite/sample/common/service_manager</code> login to the vAPI and vim service endpoints (on a management node).</li>
+</ul>
+
+Note: Depending on the vCenter Server deployment model, it is possible to have more than one management node. 
+The samples framework uses <code>src/com/vmware/vcloud/suite/sample/common/service_manager_factory</code> 
+to manage connections/sessions to multiple management nodes.</br>
+</br>
+Each sample extends the class <code>samples_base</code>. 
+This class uses <code>platform_service_controller</code> and <code>service_manager_factory</code> to create and manage the vAPI service endpoint 
+and vSphere service port. Every sample implements the following methods from the class <code>samples_base</code>:
+</p>
+
+<ul>
+<li><code>_options()</code> - Called by <code>samples_base</code> during <code>parse_args</code> phase. This occurs during initialization.</li>
+<li><code>_setup()</code> - Called by <code>samples_base</code> during <code>before</code> phase. This occurs after authentication and vAPI and vSphere service initialization.</li>
+<li><code>_execute()</code> - Called by <code>samples_base</code> during <code>run</code> phase. At this point all the connections and services are initialized.</li>
+<li><code>_cleanup()</code> - Called by <code>samples_base</code> during <code>after</code> phase. This occurs before disconnecting the services.</li>
+</ul>
+
+<p>
+The following code snippet from <code>src/com/vmware/vcloud/suite/samples/common/samples_base.py</code> illustrates
+ the order in which <code>_options()</code>, <code>_setup()</code>, <code>_execute()</code> and <code>_cleanup()</code> methods are called in the 
+samples:
+</p>
+
+<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+<pre class="prettyprint">
+    def __init__(self, description, servicemanager=None):
+        if description is None:
+            raise Exception("Sample description cannot be empty")
+        self.description = description
+        # setup the argument parser
+        self.argparser = argparse.ArgumentParser(description=description)
+        self.argparser.add_argument('-lswsdlurl', '--lswsdlurl', help='Lookup service WSDL URL')
+        self.argparser.add_argument('-lssoapurl', '--lssoapurl', help='Lookup service SOAP URL')
+        self.argparser.add_argument('-ssousername', '--ssousername', help='SSO user name')
+        self.argparser.add_argument('-ssopassword', '--ssopassword', help='SSO user password')
+        self.argparser.add_argument('-cleardata', '--cleardata', help='Clears the sample data on server after running')
+        ....
+        ....
+        ....
+        self.servicemanager = servicemanager
+
+    def parse_args(self):
+        for name in dir(self):
+            attr = getattr(self, name)
+            if callable(attr) and name == '_options':
+                attr()  # calling the method
+        self.args = self.argparser.parse_args()  # parse all the sample arguments when they are all set
+
+        if self.args.lswsdlurl is None:
+            self.lswsdlurl = SampleConfig.get_ls_wsdl_url()  # look for lookup service WSDL in the sample config
+        else:
+            self.lswsdlurl = self.args.lswsdlurl
+        assert self.lswsdlurl is not None
+        logger.info('lswsdlurl: %s' % self.lswsdlurl)
+
+        ....
+        ....
+        
+        if self.args.cleardata is not None:
+            if self.args.cleardata.lower() == 'true':
+                self.cleardata = True
+
+    def before(self):
+        if self.servicemanager is None:
+            self.servicemanager = ServiceManager(lswsdlurl=self.lswsdlurl,
+                                                 lssoapurl=self.lssoapurl,
+                                                 ssousername=self.ssousername,
+                                                 ssopassword=self.ssopassword)
+            self.servicemanager.connect()
+        for name in dir(self):
+            attr = getattr(self, name)
+            if callable(attr) and name == '_setup':
+                attr()  # calling the method
+
+    def run(self):
+        for name in dir(self):
+            attr = getattr(self, name)
+            if callable(attr) and name == '_execute':
+                try:
+                    attr()  # calling the method
+                except Exception as e:
+                    # print the exception and move on to the cleanup stage if cleardata is set to True.
+                    logger.exception(e)
+                    traceback.print_exc()
+                    if bool(self.cleardata) is not True:
+                        # re-throw the exception
+                        raise Exception(e)
+
+    def after(self):
+        if bool(self.cleardata) is True:
+            for name in dir(self):
+                attr = getattr(self, name)
+                if callable(attr) and name == '_cleanup':
+                    attr()  # calling the method
+</pre>
+
+
+
+<a name="runningsample"></a>
+<h2>Running the samples</h2>
+
+<p>
+The following parameters are needed for running most of the samples:
+</p>
+<ul>
+<li><code>lswsdlurl</code> -lookup service WSDL file URL. See <a href="#using_wsdl"> Using WSDL</a></li>
+<li><code>lssoapurl</code> - Platform Service controller's/node's (any, since data is replicated) lookupservice soap URL. Ex: https://psc/lookupservice/sdk</li>
+<li><code>ssousername</code> - username for authentication with the SSO server</li>
+<li><code>ssopassword</code> - password for the SSO user</li>
+<li><code>cleardata</code> - Optional, if set to <strong>true</strong> all the sample data gets deleted on the server after the sample run</li>
+</ul>
+
+<p>
+You can specify lswsdlur, lssoapurl, ssousername and ssopassword in a configuration file (sample.cfg). 
+If you use a configuration file, you can run samples without specifying these options on the command line.
+</p>
+
+<h3>Samples configuration</h3>
+<p>
+</br>
+<strong>sample.cfg</strong> configuration file specifies all the basic connection properties needed by most of the samples. 
+When you run a sample, you can override the configuration file values by specifying command line options.
+
+<pre style="border: 2px solid #A9A9A9; width: 60em; max-width: 60em; background-color:#DCDCDC;">
+[connection]
+lswsdlurl=file:///path/to/the/VMware-vCloud-Suite-SDK-Python-6.0.0/client/wsdl/lookupservice.wsdl
+lssoapurl=https://myserver.mydomain.com/lookupservice/sdk
+ssousername=admin
+ssopassword=adminpassword
+</pre>
+
+The sample.cfg file can be found under <code>VMware-vCloud-Suite-SDK-Python-&lt;version&gt;/client/samples/src</code>
+</br>
+</p>
+
+<a name="using_wsdl"></a>
+<h3>Working with lookup service WSDL</h3>
+<p>
+</br>
+The vCloud Suite SDK for Python samples use the vCloud Suite Lookup Service to obtain the URLs for other vCloud Suite services (SSO, vAPI, VIM, SPBM, etc.). 
+The SDK contains the Lookup Service WSDL files. The samples use the python SUDS client for accessing the lookup service.
+<br/>
+The Lookup Service WSDL files are located in the following SDK directory:
+<br/>
+<code>VMware-vCloud-Suite-SDK-Python-&lt;version&gt;/client/wsdl</code>.
+<br/>
+You must specify the WSDL file location in the <code>client/samples/src/sample.cfg</code> file and in the lookupservice.wsdl file (located in the WSDL directory).
+
+<ol>
+<li>In sample.cfg, set 'lswsdlurl' to the lokkupservice WSDL file location. Use a local file URL specification:
+e.g. lswsdlurl=file:///path/to/the/VMware-vCloud-Suite-SDK-Python-6.0.0/client/wsdl/lookupservice.wsdl</br>
+(Note: You can also specify the lookup service WSDL path to the sample as a command line option)</li>
+<li>In lookupservice.wsdl, set 'import location' to the local lookup WSDL file. Use a local file URL specification.
+<pre>
+&lt;import location="file:///path/to/the/VMware-vCloud-Suite-SDK-Python-6.0.0/client/wsdl/lookup.wsdl" namespace="urn:lookup" /&gt;
+   &lt;service name="LsService"&gt;
+      &lt;port binding="interface:LsBinding" name="LsPort"&gt;
+          &lt;soap:address location="http://localhost:8080/lookupservice/sdk" /&gt;
+      &lt;/port&gt;
+   &lt;/service&gt;
+</pre>
+</li>
+</ol>
+</p>
+
+
+<h3>Running the samples from command line</h3>
+<br>
+<p>
+You can run the samples from command line using the scripts supplied in <code>VMware-vCloud-Suite-SDK-Python-&lt;version&gt;/client/bin</code> directory:
+</br>
+Before running the samples:
+<ol>
+<li>You must set the <code>PYTHON_HOME</code> environment variable to the base directory for the python 2.7</li>
+<li>You must install all the dependencies required by the samples on client. See <a href="#dependencies"> Sample Dependencies</a></li>
+</ol>
+</p>
+<strong>Examples:</strong>
+</br>
+<pre>
+$cd /path/to/VMware-vCloud-Suite-SDK-Python-&lt;version&gt;/client/bin
+$run_sample.sh ../samples/src/com/vmware/vcloud/suite/sample/workflow/connection_workflow.py \
+    -vapiurl https://203.0.113.0/api \
+    -stsurl https://203.0.113.0:443/sts/STSService/vsphere.local \
+    -ssousername administrator@vsphere.local \
+    -ssopassword AdminPassword
+</pre>
+
+</br>
+Use the -h option to print information about a sample.  The following example shows the help for the Virtual Datacenter work flow sample.
+<pre>
+$ ./run_sample.sh  ../samples/src/com/vmware/vcloud/suite/sample/workflow/tagging_workflow.py -h
+usage: tagging_workflow.py [-h] [-lswsdlurl LSWSDLURL] [-lssoapurl LSSOAPURL]
+                           [-ssousername SSOUSERNAME]
+                           [-ssopassword SSOPASSWORD]
+                           [-mgmtinstancename MGMTINSTANCENAME]
+                           [-cleardata CLEARDATA] [-clustername CLUSTERNAME]
+                           [-categoryname CATEGORYNAME]
+                           [-categorydesc CATEGORYDESC] [-tagname TAGNAME]
+                           [-tagdesc TAGDESC]
+
+Demonstrates tagging CRUD operations 
+Step 1: Create a Tag category.
+Step 2: Create a Tag under the category.
+Step 3: Retrieve the managed object id of an existing cluster from its name.
+Step 4: Assign the tag to the cluster.
+Additional steps when clearData flag is set to TRUE:
+Step 5: Detach the tag from the cluster.
+Step 6: Delete the tag. Step 7: Delete the tag category.
+Note: the sample needs an existing cluster
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -lswsdlurl LSWSDLURL, --lswsdlurl LSWSDLURL
+                        Lookup service WSDL URL
+  -lssoapurl LSSOAPURL, --lssoapurl LSSOAPURL
+                        Lookup service SOAP URL
+  -ssousername SSOUSERNAME, --ssousername SSOUSERNAME
+                        SSO user name
+  -ssopassword SSOPASSWORD, --ssopassword SSOPASSWORD
+                        SSO user password
+  -mgmtinstancename MGMTINSTANCENAME, --mgmtinstancename MGMTINSTANCENAME
+                        Instance name of the vCenter Server management node.
+                        When only one node is registered, it is selected by
+                        default; otherwise, omit the parameter to get a list
+                        of available nodes.
+  -cleardata CLEARDATA, --cleardata CLEARDATA
+                        Clears the sample data on server after running
+  -clustername CLUSTERNAME, --clustername CLUSTERNAME
+                        Name of the cluster to be tagged
+  -categoryname CATEGORYNAME, --categoryname CATEGORYNAME
+                        Name of the Category to be created
+  -categorydesc CATEGORYDESC, --categorydesc CATEGORYDESC
+                        Description of the Category to be created
+  -tagname TAGNAME, --tagname TAGNAME
+                        Name of the tag to be created
+  -tagdesc TAGDESC, --tagdesc TAGDESC
+                        Description of the tag to be created
+</pre>
+
+Note: If you choose to specify the connection properties in sample.cfg file; you can omit the following options in the command line:
+<ul>
+<li>lswsdlurl</li>
+<li>lssoapurl</li>
+<li>ssousername</li>
+<li>ssopassword</li>
+</ul>
+</p>
+
+Running a sample without sample.cfg (specifying all the connection options in the command line):
+<pre>
+./run_sample.sh ../samples/src/com/vmware/vcloud/suite/sample/workflow/tagging_workflow.py \
+    -lswsdlurl file:///Users/smukhopadhyay/Downloads/lookupservice.wsdl \
+    -lssoapurl https://203.0.113.0/lookupservice/sdk \
+    -ssousername Administrator@vsphere.local \
+    -ssopassword AdminPassword \
+    -categoryname test -categorydesc test-category -tagname sample -tagdesc sample-tag \
+    -clustername vAPISDKCluster -cleardata True
+</pre>
+</br>
+Running a sample specifying connection properties in sample.cfg:
+<pre>
+./run_sample.sh ../samples/src/com/vmware/vcloud/suite/sample/workflow/tagging_workflow.py \
+    -categoryname test -categorydesc test-category -tagname sample -tagdesc sample-tag \
+    -clustername vAPISDKCluster -cleardata True
+</pre>
+<p>
+Note: In the above example <b>mgmtinstancename</b> is optional and can be omitted if there's a single vCenter Server management node in the deployment.
+When there is more than one management node, the user MUST specify the management node instance name against which the sample needs
+ to run, else the sample throws <b>MultipleManagementNodeException</b>.
+Example of a multiple management node exception:
+<pre>
+raise MultipleManagementNodeException(MultipleManagementNodeException.format(result))
+com.vmware.vcloud.suite.sample.common.lookup_service_helper.MultipleManagementNodeException: Multiple Management Node Found on server
+Node name: vcenter-1.example.com uuid: de2afd86-790e-11e4-9c20-0200087f55c6
+Node name: vcenter-2.example.com uuid: 545da868-7910-11e4-81e1-020008e89d83
+</pre>
+Example exception when an invalid management instance name is specified by the user:
+<pre>
+ValueError: abc is not a valid management node instance name
+Available management nodes:
+Node name: vcenter-2.example.com uuid: 545da868-7910-11e4-81e1-020008e89d83
+Node name: vcenter-1.example.com uuid: de2afd86-790e-11e4-9c20-0200087f55c6
+</pre> 
+</p>
+
+
+<hr />
+<table border="0" width="100%">
+<tr>
+<td>
+<p class="Miniscule">Copyright &copy; 2015 VMware, Inc.  All rights not expressly granted herein are reserved.</p>
+</td>
+<td align="right"><p class="Miniscule">Last updated: 23rd January 2015&nbsp;|&nbsp; VMware vCloud Suite Python SDK</p></td>
+</tr>
+</table>
+
+</td></tr></table>
+
+
+</body>
+</html>

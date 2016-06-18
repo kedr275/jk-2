@@ -1,0 +1,20 @@
+<% /*
+ * Renders a Python header comment.
+ *
+ * @variable python is a reference to the PythonLanguageHelper instance
+ * @variable model is a reference to the IdlModel instance
+ * @variable extra is a list of text lines to add to the comment (optional)
+ */ %>\
+#---------------------------------------------------------------------------
+<% model.copyright.each { line -> %>\
+# $line
+<% } %>\
+
+# AUTO GENERATED FILE -- DO NOT MODIFY!
+<% if (extra) { %>\
+#
+<%  extra.each { line -> %>\
+# $line
+<%  } %>\
+<% } %>\
+#---------------------------------------------------------------------------

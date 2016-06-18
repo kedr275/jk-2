@@ -1,0 +1,44 @@
+${vmodl.headerComment(service)}
+package ${service.namespace};
+
+${vmodl.javadoc(service)}
+interface ${service.name.asCapitalizedWords} {
+<% service.enumerations.each { e -> %>\
+    ${vmodl.javadoc(e, 1)}
+    enum ${e.name.asCapitalizedWords} {
+        //TODO: add javadoc here
+        <% def block = e.constants.collect { c ->
+        """
+        ${vmodl.javadoc(c, 2)}
+        ${c.name.asDeclared}"""
+        }.join(',\n') %>\
+        ${block};
+    }
+
+<% } %>\
+<% service.structures.each { s -> %>
+    ${vmodl.javadoc(s, 1)}
+    class ${s.name.asCapitalizedWords} {
+        //TODO: output enums, possibly structures and attributes
+<%  s.attributes.each { a -> %>
+        ${vmodl.javadoc(a, 2)}
+        ${vmodl.atHasFieldsOf(a)}${vmodl.atResource(a)}${vmodl.mapType(a.type)} ${a.name.asDeclared};
+<%  } %>\
+    }
+
+<% } %>\
+<% service.operations.each { o -> %>\
+    ${vmodl.javadoc(o, 1)}
+    ${vmodl.atResource(o.result)}${vmodl.mapType(o.result.type)} ${o.name.asDeclared}(\
+<%  if (o.parameters) { %>\
+${o.parameters.collect { p -> vmodl.atHasFieldsOf(p) + vmodl.atResource(p) + vmodl.mapType(p.type) + " " + p.name.asDeclared }.join(', ')}\
+<%  } %>\
+)\
+<%  if (o.errors) { %>\
+
+            throws ${o.errors.collect { it.name.asDeclared }.join(', ')}\
+<%  } %>\
+;
+
+<% } %>\
+}

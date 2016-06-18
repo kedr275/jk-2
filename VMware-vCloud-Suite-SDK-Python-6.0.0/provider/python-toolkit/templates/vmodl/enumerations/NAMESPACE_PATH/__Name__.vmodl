@@ -1,0 +1,13 @@
+${vmodl.headerComment(enumeration)}
+package ${enumeration.namespace};
+
+${vmodl.javadoc(enumeration)}
+public enum ${enumeration.name.asCapitalizedWords} {
+    //${enumeration.constants.join(',')};
+<% def block = enumeration.constants.collect { c ->
+"""
+    ${vmodl.javadoc(c, 1)}
+    ${c.name.asDeclared}"""
+    }.join(',\n') %>\
+${block};
+}

@@ -1,0 +1,63 @@
+__docformat__ = 'restructuredtext en'
+
+import logging
+
+<% python.pushContext(idlPackage) %>\
+<% idlPackage.services.each { service -> %>\
+from ${idlPackage.name.asLowerCaseWithUnderscores}_provider import ${service.name.asCapitalizedWords}
+<% } %>\
+from vmware.vapi.bindings.skeleton import VapiFilter
+from vmware.vapi.stdlib.provider.factories import MessageFactory, ErrorFactory
+
+messages = {
+    # Put entries for your messages here.
+    # Each entry is a key: value, where the key is the message id
+    # (which must be globally unique) and the value is a format string
+}
+message_factory = MessageFactory(messages)
+logger = logging.getLogger(__name__)
+logger.addFilter(VapiFilter())
+
+<% idlPackage.services.each { service -> %>
+class ${service.name.asCapitalizedWords}Impl(${service.name.asCapitalizedWords}):
+    """
+    ${python.formatDoc(service, python.providerType)}\
+    """
+    def __init__(self):
+        ${service.name.asCapitalizedWords}.__init__(self)
+        # Initialization code goes here
+
+<% service.operations.each { o -> %>\
+<% if (o.parameters) { %>\
+    def ${o.name.asLowerCaseWithUnderscores}(self,
+<% python.getRequiredParameters(o).each { p -> %>\
+         ${python.getOperationNameIndent(o)}${p.name.asLowerCaseWithUnderscores},
+<% } %>\
+<% python.getOptionalParameters(o).each { p -> %>\
+         ${python.getOperationNameIndent(o)}${p.name.asLowerCaseWithUnderscores}=None,
+<% } %>\
+         ${python.getOperationNameIndent(o)}):
+<% } else { %>\
+    def ${o.name.asLowerCaseWithUnderscores}(self):
+<% } %>\
+        """
+        ${python.formatDoc(o,2,python.providerType)}\
+        """
+        # Method implementation goes here
+        pass
+
+<% } %>\
+<% } %>\
+
+def register_instance():
+    """
+    Specify the instances that should be
+    registered with the api provider
+    """
+    return [
+<% idlPackage.services.each { service -> %>\
+        ${service.name.asCapitalizedWords}Impl(),
+<% } %>\
+    ]
+<% python.popContext() %>\
+<% python.createPackageMarkers() %>\

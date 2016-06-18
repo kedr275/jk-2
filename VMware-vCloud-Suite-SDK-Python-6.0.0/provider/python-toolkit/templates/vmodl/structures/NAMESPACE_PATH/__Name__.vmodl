@@ -1,0 +1,24 @@
+${vmodl.headerComment(structure)}
+package ${structure.namespace};
+
+${vmodl.javadoc(structure)}
+${vmodl.atIncludable(structure)}
+${vmodl.atInclude(structure)}
+public class ${structure.name.asCapitalizedWords} {
+<% structure.enumerations.each { e -> %>\
+    ${vmodl.javadoc(e, 1)}
+    enum ${e.name.asCapitalizedWords} {
+        <% def block = e.constants.collect { c ->
+        """
+        ${vmodl.javadoc(c, 2)}
+        ${c.name.asDeclared}"""
+        }.join(',\n') %>\
+        ${block};
+    }
+
+<% } %>\
+<%  structure.attributes.each { a -> %>
+    ${vmodl.javadoc(a, 1)}
+    ${vmodl.atHasFieldsOf(a)}${vmodl.atResource(a)}${vmodl.mapType(a.type)} ${a.name.asDeclared};
+<%  } %>\
+}
